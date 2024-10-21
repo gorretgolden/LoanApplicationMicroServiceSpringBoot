@@ -10,8 +10,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-@Entity // The class represents a table in the database
-@Table(name = "loan_applications") // Used to define a table for the loan applications
+@Entity
+@Table(name = "loan_applications")
 public class LoanApplication {
 
     @Id
@@ -22,20 +22,14 @@ public class LoanApplication {
     private String loan_purpose;
     private int repayment_period;
 
-    //Using the loan status enum
     @Enumerated(EnumType.STRING)
     private LoanStatus status;
 
-    // One to many relationship between the user and loan applications
     @ManyToOne
-    @JoinColumn(name = "customer_id", insertable = false, updatable = false)
+    @JoinColumn(name = "customer_id", nullable = false)
     private User customer;
 
-
-	public LoanApplication() {
-
-	}
- 
+    public LoanApplication() {}
 
     // Getters and Setters
     public Long getId() {
@@ -68,6 +62,14 @@ public class LoanApplication {
 
     public void setRepaymentPeriod(int repayment_period) {
         this.repayment_period = repayment_period;
+    }
+
+    public LoanStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(LoanStatus status) {
+        this.status = status;
     }
 
     public User getCustomer() {
