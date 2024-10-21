@@ -80,3 +80,4 @@ public class LoanApplication {
         this.customer = customer;
     }
 }
+
