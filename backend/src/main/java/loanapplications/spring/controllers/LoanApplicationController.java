@@ -19,27 +19,27 @@ public class LoanApplicationController {
     @Autowired
     private LoanApplicationService loanApplicationService;
 
-    // 1. Apply for a loan
+    // Applying for a loan
     @PostMapping("/apply")
     public ResponseEntity<Map<String, Object>> applyForLoan(@RequestBody LoanApplication loanApplication,
                                                             @AuthenticationPrincipal UserDetails userDetails) {
         return loanApplicationService.applyForLoan(loanApplication, userDetails);
     }
 
-    // 2. Show loan status by loanId
+    // Showing the loan status by loan id
     @GetMapping("/{loanId}")
     public ResponseEntity<Map<String, Object>> getLoanStatus(@PathVariable Long loanId) {
         return loanApplicationService.getLoanStatus(loanId);
     }
 
-    // 3. Update a loan by loanId
+    // Updating  a loan by loan id
     @PutMapping("/{loanId}")
     public ResponseEntity<Map<String, Object>> updateLoan(@PathVariable Long loanId,
                                                           @RequestBody LoanApplication updatedLoanApplication) {
         return loanApplicationService.updateLoan(loanId, updatedLoanApplication);
     }
 
-    // 4. Get all loan applications by customerId
+    // Getting all loan applications for the customer by customer if
     @GetMapping("/customer/{customerId}")
     public ResponseEntity<List<LoanApplication>> getCustomerLoanApplications(@PathVariable Long customerId) {
         return loanApplicationService.getCustomerLoanApplications(customerId);
