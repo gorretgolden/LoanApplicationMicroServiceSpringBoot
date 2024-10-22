@@ -24,7 +24,7 @@ import loanapplications.spring.repositories.LoanApplicationRepository;
 import loanapplications.spring.repositories.UserRepository;
 
 @RestController
-@RequestMapping("/api/loanS")
+@RequestMapping("/api/loans")
 public class LoanApplicationAPIController {
 
     private final LoanApplicationRepository loanApplicationRepository;

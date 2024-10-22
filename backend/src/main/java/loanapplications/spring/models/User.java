@@ -2,10 +2,12 @@ package loanapplications.spring.models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -45,6 +47,9 @@ public class User implements Serializable{
 	public User() {
 
 	}
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Collection<String> roles;
 
     // Getters and Setters
     public Long getId() {
@@ -109,5 +114,13 @@ public class User implements Serializable{
 
     public void setLoanApplications(List<LoanApplication> loanApplications) {
         this.loanApplications = loanApplications;
+    }
+
+    public Collection<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<String> roles) {
+        this.roles = roles;
     }
 }

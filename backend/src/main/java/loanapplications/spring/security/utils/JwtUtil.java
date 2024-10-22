@@ -1,4 +1,4 @@
-package  loanapplications.spring.security.utils;
+package loanapplications.spring.security.utils;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -18,6 +18,11 @@ public class JwtUtil {
     public String generateToken(String username) {
         Map<String, Object> claims = new HashMap<>();
         return createToken(claims, username);
+    }
+
+    // Make this method public
+    public String extractUsername(String token) {
+        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody().getSubject();
     }
 
     private String createToken(Map<String, Object> claims, String subject) {
@@ -41,9 +46,5 @@ public class JwtUtil {
 
     private Date extractExpiration(String token) {
         return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody().getExpiration();
-    }
-
-    private String extractUsername(String token) {
-        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody().getSubject();
     }
 }

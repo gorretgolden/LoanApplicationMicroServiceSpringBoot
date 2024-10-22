@@ -1,57 +1,48 @@
 package loanapplications.spring.security.filters;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.web.filter.OncePerRequestFilter;
-
-
 import java.io.IOException;
 
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import loanapplications.spring.security.utils.JwtUtil;
+
+@Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final String SECRET_KEY = "your_secret_key"; // Use your actual secret key
-    private final UserDetailsService userDetailsService;
-
-    public JwtAuthenticationFilter(UserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
-        
-        String authorizationHeader = request.getHeader("Authorization");
+        final String authorizationHeader = request.getHeader("Authorization");
+
+        String username = null;
+        String jwt = null;
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            String token = authorizationHeader.substring(7); // Remove "Bearer "
-            String username;
-
-            try {
-                Claims claims = Jwts.parser()
-                        .setSigningKey(SECRET_KEY)
-                        .parseClaimsJws(token)
-                        .getBody();
-                username = claims.getSubject();
-
-                if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                    UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                    if (userDetails != null) {
-                        var authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                        SecurityContextHolder.getContext().setAuthentication(authentication);
-                    }
-                }
-            } catch (Exception e) {
-                // Handle token exceptions (e.g., expired token)
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                return;
-            }
+            jwt = authorizationHeader.substring(7);
+            username = jwtUtil.extractUsername(jwt);
         }
 
-        filterChain.doFilter(request, response);
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            // If the user is valid, set the authentication in the context
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                    username, null, null);
+            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        }
+
+        chain.doFilter(request, response);
     }
 }
