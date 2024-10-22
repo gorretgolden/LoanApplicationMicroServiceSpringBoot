@@ -1,15 +1,20 @@
 package loanapplications.spring.repositories;
 
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import loanapplications.spring.models.LoanApplication;
 import java.util.List;
-import java.util.Optional;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import loanapplications.spring.models.LoanApplication;
+import loanapplications.spring.models.LoanStatus;
+import loanapplications.spring.models.User;
 
 @Repository
 public interface LoanApplicationRepository extends JpaRepository<LoanApplication, Long> {
-    Optional<LoanApplication> findByCustomerIdAndStatus(Long customerId, String status);
+    List<LoanApplication> findByCustomerIdOrderByIdDesc(Long customerId);
+    LoanApplication findFirstByCustomerAndStatus(User customer, LoanStatus status);
+    boolean existsByCustomerIdAndStatus(Long customerId, LoanStatus status);
+    List<LoanApplication> findByCustomerIdAndStatus(Long customerId, LoanStatus status);
     List<LoanApplication> findByCustomerId(Long customerId);
 }

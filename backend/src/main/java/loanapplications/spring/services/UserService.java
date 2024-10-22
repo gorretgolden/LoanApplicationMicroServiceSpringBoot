@@ -15,31 +15,31 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    private final BCryptPasswordEncoder passwordEncoder;
+
     @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    public UserService(BCryptPasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public User createUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
- // Change the return type to Optional<User>
- public Optional<User> findByEmail(String email) {
-    return userRepository.findByEmail(email);
-}
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
 
-// Change the return type to Optional<User>
-public Optional<User> findByContact(String contact) {
-    return userRepository.findByContact(contact);
-}
+    public Optional<User> findByContact(String contact) {
+        return userRepository.findByContact(contact);
+    }
 
-// Check if user exists by email
-public boolean existsByEmail(String email) {
-    return findByEmail(email).isPresent();
-}
+    public boolean existsByEmail(String email) {
+        return findByEmail(email).isPresent();
+    }
 
-// Check if user exists by contact
-public boolean existsByContact(String contact) {
-    return findByContact(contact).isPresent();
-}
+    public boolean existsByContact(String contact) {
+        return findByContact(contact).isPresent();
+    }
 }
