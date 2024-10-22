@@ -29,23 +29,25 @@ public class UserAPIController {
     private JwtUtil jwtUtil; // JWT Utility for generating tokens
 
     // Function to register customers
+    
     @PostMapping("/register")
     public ResponseEntity<Map<String, Object>> createNewAccount(@RequestBody User user) {
+        System.out.println("Received user: " + user.toString());
         Map<String, Object> response = new HashMap<>();
+        //validating email and contact
 
-        // Validate email and contact
         if (userService.existsByEmail(user.getEmail())) {
             response.put("success", false);
             response.put("message", "User with this email already exists");
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
-
+        
         if (userService.existsByContact(user.getContact())) {
             response.put("success", false);
             response.put("message", "User with this phone number already exists");
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
-        }
-
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }else{
+            
         userService.createUser(user);
         String userToken = jwtUtil.generateToken(user.getEmail()); // Generate JWT token
 
@@ -54,9 +56,12 @@ public class UserAPIController {
         response.put("token", userToken);
         response.put("message", "Account created successfully");
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
+        //return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.ok(Map.of("message", "Request received", "user", user));
+        }
+        
 
+    }
     // Function to login users
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> loginRequest) {
@@ -85,4 +90,6 @@ public class UserAPIController {
         return ResponseEntity.ok(response);
     }
 }
+
+
 
