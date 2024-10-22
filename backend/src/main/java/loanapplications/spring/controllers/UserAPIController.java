@@ -19,7 +19,7 @@ import loanapplications.spring.security.utils.JwtUtil;
 import loanapplications.spring.services.UserService;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/auth")
 public class UserAPIController {
 
     @Autowired
