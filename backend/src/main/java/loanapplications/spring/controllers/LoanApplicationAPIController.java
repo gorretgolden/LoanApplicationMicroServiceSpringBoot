@@ -24,47 +24,12 @@ import loanapplications.spring.repositories.LoanApplicationRepository;
 import loanapplications.spring.repositories.UserRepository;
 
 @RestController
-@RequestMapping("/api/loanApplications")
+@RequestMapping("/api/loanS")
 public class LoanApplicationAPIController {
 
     private final LoanApplicationRepository loanApplicationRepository;
     private final UserRepository userRepository;
 
-
-@Service
-public class UserService {
-
-    @Autowired
-    private UserRepository userRepository;
-
-    private final BCryptPasswordEncoder passwordEncoder;
-
-    @Autowired
-    public UserService(BCryptPasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
-    }
-
-    public User createUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
-    }
-
-    public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
-    }
-
-    public Optional<User> findByContact(String contact) {
-        return userRepository.findByContact(contact);
-    }
-
-    public boolean existsByEmail(String email) {
-        return findByEmail(email).isPresent();
-    }
-
-    public boolean existsByContact(String contact) {
-        return findByContact(contact).isPresent();
-    }
-}
 
     public LoanApplicationAPIController(LoanApplicationRepository loanApplicationRepository, UserRepository userRepository) {
         this.loanApplicationRepository = loanApplicationRepository;
@@ -89,8 +54,8 @@ public class UserService {
         }
     }
 
-    // Create a new loan application
-    @PostMapping
+    // Creating a new loan application
+    @PostMapping("/apply")
     public ResponseEntity<?> apply(@Valid @RequestBody LoanApplication loanApplication) {
         User customer = userRepository.findById(loanApplication.getCustomer().getId()).orElse(null);
 
