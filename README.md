@@ -1,34 +1,16 @@
-# Spring Boot with PostgreSQL and Docker Compose Example
+# Loan Microservice using Spring Boot with PostgreSQL and Docker Compose
 
-## STEPS FOR THIS SPRING BOOT APP
-- Define dependencies in build.gradle
-- Create a Spring Boot Main @SpringBootApplication
-- Create components @Entity / @RestController / @Repository
-- Create application.properties
-- Build 
-- Check app using curls 
+## Run  the backend application 
+`mvn spring-boot:run`
 
-## BUILD the application 
-./gradlew build   
+## Build Up Docker Compose 
+`docker-compose up --build `  
+`docker-compose down <- down docker compose   `  
 
-## BUILD AND UP Docker Compose 
-docker-compose up --build   
-docker-compose down <- down docker compose     
-
-## CURLS 
-
-### POST /user/save 
-curl -s -X POST \
-  http://localhost:8080/user/save \
-  -H 'Content-Type: application/json' \
-  -d '{"name":"Your Name"}'
+## Acess the database
+http://localhost:5050/browser/
 
 
-### GET /user/{id}
-curl -s -X GET \
-  http://localhost:8080/user/1 
-  
-  
-## Complete explanation
-english: https://experto.dev/en/spring-boot-with-postgresql-and-docker-compose/   
-spanish: https://experto.dev/spring-boot-postgresql-docker-compose/   
+## Run  the frontend application 
+`npm install`
+`npm start`
